@@ -1,0 +1,13 @@
+{
+"resources":
+	[
+		{"name":"bg","type":"image","url":"assets/sky.jpg"},
+		{"name":"p","type":"image","url":"assets/p.png"},
+        {"name":"description","type":"json","url":"config/description.json"}
+	],
+
+"groups":
+	[
+        {"name":"preload","keys":"bg,p"}
+	]
+}
