@@ -5,179 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>首付计算</title>
 </head>
-
 <body>
+    <i>上次更新 2017-04-07 16:15</i>
+    <p>
     总价
     <input type="text" id="totalPrice" value="450" />万
     <p>
-    面积
-    <input type="text" id="totalSize" value="88" />平
-    <p>
-        网签价
-        <input type="text" id="appraisePrice" value="374" />万
+        面积
+        <input type="text" id="totalSize" value="88" />平
         <p>
-            房屋类型<select id="houseType">
-                <option value="a" selected="selected">商品房</option>
-                <option value="b">公房</option>
-                <option value="c">一类经适房</option>
-                <option value="d">二类经适房</option>
-            </select>
+            网签价
+            <input type="text" id="appraisePrice" value="374" />万
             <p>
-            <input type="checkbox" id="first" checked="checked">首套</input>
-            <input type="checkbox" id="common" checked="checked">普宅</input>
-            <input type="checkbox" id="five" checked="checked">满五唯一</input>
-            <input type="checkbox" id="two">满二</input>
-            <p>
-                上次网签价
-                <input type="text" id="prevAppraisePrice" value="150" />万
+                房屋类型
+                <select id="houseType">
+                    <option value="a" selected="selected">商品房</option>
+                    <option value="b">公房</option>
+                    <option value="c">一类经适房</option>
+                    <option value="d">二类经适房</option>
+                </select>
                 <p>
-                    中介费百分点
-                    <input type="text" id="commission" value="2.7" />％
+                    <input type="checkbox" id="first" checked="checked">首套</input>
+                    <input type="checkbox" id="common" checked="checked">普宅</input>
+                    <input type="checkbox" id="five" checked="checked">满五唯一</input>
+                    <input type="checkbox" id="two">满二</input>
                     <p>
-                        <input type="button" id="calc" value="计算"></input>
+                        上次网签价
+                        <input type="text" id="prevAppraisePrice" value="150" />万
                         <p>
-                            <div id="result"></div>
-                            <script type="text/javascript">
-                            //90m-
-                            var calc = (function() {
-                                var props = {
-                                    totalPrice: 450,
-                                    totalSize: 88,
-                                    appraisePrice: 374,
-                                    houseType: 0,
-                                    first: 1,
-                                    common: 1,
-                                    five: 1,
-                                    two: 1,
-                                    prevAppraisePrice: 100,
-                                    commission: 0.027
-                                };
-                                var functions = {
-                                    totalPrice: function(value) {
-                                        if (!isNaN(value))
-                                            props.totalPrice = value;
-                                        return props.totalPrice;
-                                    },
-                                    totalSize: function(value) {
-                                        if (!isNaN(value))
-                                            props.totalSize = value;
-                                        return props.totalSize;
-                                    },
-                                    appraisePrice: function(value) {
-                                        if (!isNaN(value))
-                                            props.appraisePrice = value;
-                                        return props.appraisePrice;
-                                    },
-                                    houseType: function(value) {
-                                        if (!isNaN(value))
-                                            props.houseType = value;
-                                        return props.houseType;
-                                    },
-                                    first: function(value) {
-                                        if (!isNaN(value))
-                                            props.first = value;
-                                        return props.first;
-                                    },
-                                    common: function(value) {
-                                        if (!isNaN(value))
-                                            props.common = value;
-                                        return props.common;
-                                    },
-                                    five: function(value) {
-                                        if (!isNaN(value))
-                                            props.five = value;
-                                        return props.five;
-                                    },
-                                    two: function(value) {
-                                        if (!isNaN(value))
-                                            props.two = value;
-                                        return props.two;
-                                    },
-                                    prevAppraisePrice: function(value) {
-                                        if (!isNaN(value))
-                                            props.prevAppraisePrice = value;
-                                        return props.prevAppraisePrice;
-                                    },
-                                    commission: function(value) {
-                                        if (!isNaN(value))
-                                            props.commission = value;
-                                        return props.commission;
-                                    },
-                                    value: function() {
-                                        var firstPayPercent; //首付比例
-                                        if (props.first == 1) {
-                                            firstPayPercent = props.common == 1 ? 0.35 : 0.6;
-                                        } else {
-                                            firstPayPercent = props.common == 1 ? 0.6 : 0.8;
-                                        }
-                                        var mb = Math.floor(props.appraisePrice * (1 - firstPayPercent)); //最高贷款
-                                        var dt = props.appraisePrice * 0.01; //契税
-                                        var pit = 0; //个人所得税
-                                        var vat = 0; //增值税
-                                        if (props.five != 1) { // !(满五&唯一)
-                                            if (props.two != 1) { //不满二
-                                                vat = props.appraisePrice * 0.055;
+                            中介费百分点
+                            <input type="text" id="commission" value="2.7" />％
+                            <p>
+                                <input type="button" id="calc" value="计算"></input>
+                                <p>
+                                    <div id="result"></div>
+                                    <script type="text/javascript">
+                                    //90m-
+                                    var calc = (function() {
+                                        var props = {
+                                            totalPrice: 450,
+                                            totalSize: 88,
+                                            appraisePrice: 374,
+                                            houseType: 0,
+                                            first: 1,
+                                            common: 1,
+                                            five: 1,
+                                            two: 1,
+                                            prevAppraisePrice: 100,
+                                            commission: 0.027
+                                        };
+                                        var functions = {
+                                            totalPrice: function(value) {
+                                                if (!isNaN(value))
+                                                    props.totalPrice = value;
+                                                return props.totalPrice;
+                                            },
+                                            totalSize: function(value) {
+                                                if (!isNaN(value))
+                                                    props.totalSize = value;
+                                                return props.totalSize;
+                                            },
+                                            appraisePrice: function(value) {
+                                                if (!isNaN(value))
+                                                    props.appraisePrice = value;
+                                                return props.appraisePrice;
+                                            },
+                                            houseType: function(value) {
+                                                if (!isNaN(value))
+                                                    props.houseType = value;
+                                                return props.houseType;
+                                            },
+                                            first: function(value) {
+                                                if (!isNaN(value))
+                                                    props.first = value;
+                                                return props.first;
+                                            },
+                                            common: function(value) {
+                                                if (!isNaN(value))
+                                                    props.common = value;
+                                                return props.common;
+                                            },
+                                            five: function(value) {
+                                                if (!isNaN(value))
+                                                    props.five = value;
+                                                return props.five;
+                                            },
+                                            two: function(value) {
+                                                if (!isNaN(value))
+                                                    props.two = value;
+                                                return props.two;
+                                            },
+                                            prevAppraisePrice: function(value) {
+                                                if (!isNaN(value))
+                                                    props.prevAppraisePrice = value;
+                                                return props.prevAppraisePrice;
+                                            },
+                                            commission: function(value) {
+                                                if (!isNaN(value))
+                                                    props.commission = value;
+                                                return props.commission;
+                                            },
+                                            value: function() {
+                                                var firstPayPercent; //首付比例
+                                                if (props.first == 1) {
+                                                    firstPayPercent = props.common == 1 ? 0.35 : 0.6;
+                                                } else {
+                                                    firstPayPercent = props.common == 1 ? 0.6 : 0.8;
+                                                }
+                                                var mb = Math.floor(props.appraisePrice * (1 - firstPayPercent)); //最高贷款
+                                                var pit = 0; //个人所得税
+                                                var vat = 0; //增值税
+                                                if (props.five != 1) { // !(满五&唯一)
+                                                    if (props.two != 1) { //不满二
+                                                        vat = props.appraisePrice * 0.055;
+                                                    }
+                                                    // (本次网签价-原值-装修款-原契税-增值税）*20%
+                                                    pit = (props.appraisePrice - props.prevAppraisePrice - props.appraisePrice * 0.1 - props.prevAppraisePrice * 0.01 - vat) * 0.2;
+                                                }
+                                                var dt = (props.appraisePrice - vat) * 0.01; //契税
+                                                var djk = 0; //综合地价款
+                                                var crj = 0; //土地出让金
+                                                switch (props.houseType) {
+                                                    case 1:
+                                                        crj = props.totalSize * 0.00156;
+                                                        break;
+                                                    case 2:
+                                                        djk = props.appraisePrice * 0.1;
+                                                        break;
+                                                    case 3:
+                                                        djk = props.appraisePrice * 0.03;
+                                                        break;
+                                                }
+                                                var commission = props.totalPrice * props.commission / 100; //代理费
+                                                var all = Math.round(((props.totalPrice - mb) + dt + pit + vat + djk + crj + commission) * 100) / 100;
+                                                var result = '';
+                                                result += '商贷：' + mb + '<br>';
+                                                result += '契税：' + dt + '<br>';
+                                                result += '个税：' + pit + '<br>';
+                                                result += '增值税：' + vat + '<br>';
+                                                result += '综合地价款：' + djk + '<br>';
+                                                result += '土地出让金：' + crj + '<br>';
+                                                result += '中介费：' + commission + '<br>';
+                                                result += '总首付：' + all;
+                                                return result;
                                             }
-                                            // (本次网签价-原值-装修款-原契税-增值税）*20%
-                                            pit = (props.appraisePrice - props.prevAppraisePrice - props.appraisePrice * 0.1 - props.prevAppraisePrice * 0.01 - vat) * 0.2;
+                                        };
+                                        return functions;
+                                    })();
+                                    var dom = {
+                                        totalPrice: document.getElementById('totalPrice'),
+                                        totalSize: document.getElementById('totalSize'),
+                                        appraisePrice: document.getElementById('appraisePrice'),
+                                        houseType: document.getElementById('houseType'),
+                                        first: document.getElementById('first'),
+                                        common: document.getElementById('common'),
+                                        five: document.getElementById('five'),
+                                        two: document.getElementById('two'),
+                                        prevAppraisePrice: document.getElementById('prevAppraisePrice'),
+                                        commission: document.getElementById('commission'),
+                                        calc: document.getElementById('calc'),
+                                        result: document.getElementById('result')
+                                    };
+                                    dom.calc.addEventListener("click", function() {
+                                        calc.totalPrice(parseFloat(dom.totalPrice.value));
+                                        calc.totalSize(parseFloat(dom.totalSize.value));
+                                        calc.appraisePrice(parseFloat(dom.appraisePrice.value));
+                                        var types = houseType.options.length;
+                                        for (var i = 0; i < types; i++) {
+                                            if (houseType.options[i].selected) {
+                                                calc.houseType(i);
+                                                break;
+                                            }
                                         }
-                                        var djk = 0; //综合地价款
-                                        var crj = 0; //土地出让金
-                                        switch( props.houseType ){
-                                        	case 1:crj = props.totalSize * 0.00156;break;
-                                        	case 2:djk = props.appraisePrice * 0.1;break;
-                                        	case 3:djk = props.appraisePrice * 0.03;break;
-                                        }
-                                        var commission = props.totalPrice * props.commission / 100; //代理费
-                                        var all = Math.round(((props.totalPrice - mb) + dt + pit + vat + djk + crj + commission) * 100) / 100;
-                                        var result = '';
-                                        result += '商贷：' + mb + '<br>';
-                                        result += '契税：' + dt + '<br>';
-                                        result += '个税：' + pit + '<br>';
-                                        result += '增值税：' + vat + '<br>';
-                                        result += '综合地价款：' + djk + '<br>';
-                                        result += '土地出让金：' + crj + '<br>';
-                                        result += '中介费：' + commission + '<br>';
-                                        result += '总首付：' + all;
-                                        return result;
-                                    }
-                                };
-                                return functions;
-                            })();
-                            var dom = {
-                                totalPrice: document.getElementById('totalPrice'),
-                                totalSize: document.getElementById('totalSize'),
-                                appraisePrice: document.getElementById('appraisePrice'),
-                                houseType: document.getElementById('houseType'),
-                                first: document.getElementById('first'),
-                                common: document.getElementById('common'),
-                                five: document.getElementById('five'),
-                                two: document.getElementById('two'),
-                                prevAppraisePrice: document.getElementById('prevAppraisePrice'),
-                                commission: document.getElementById('commission'),
-                                calc: document.getElementById('calc'),
-                                result: document.getElementById('result')
-                            };
-                            dom.calc.addEventListener("click", function() {
-                                calc.totalPrice(parseFloat(dom.totalPrice.value));
-                                calc.totalSize(parseFloat(dom.totalSize.value));
-                                calc.appraisePrice(parseFloat(dom.appraisePrice.value));
-                                var types=houseType.options.length;
-                                for(var i=0;i<types;i++){
-                                	if( houseType.options[i].selected ){
-                                		calc.houseType(i);
-                                		break;
-                                	}
-                                }
-                                calc.prevAppraisePrice(parseFloat(dom.prevAppraisePrice.value));
-                                calc.commission(parseFloat(dom.commission.value));
-                                calc.first(dom.first.checked ? 1 : 0);
-                                calc.common(dom.common.checked ? 1 : 0);
-                                calc.five(dom.five.checked ? 1 : 0);
-                                calc.two(dom.two.checked ? 1 : 0);
-                                dom.result.innerHTML = calc.value();
-                            });
-                            </script>
+                                        calc.prevAppraisePrice(parseFloat(dom.prevAppraisePrice.value));
+                                        calc.commission(parseFloat(dom.commission.value));
+                                        calc.first(dom.first.checked ? 1 : 0);
+                                        calc.common(dom.common.checked ? 1 : 0);
+                                        calc.five(dom.five.checked ? 1 : 0);
+                                        calc.two(dom.two.checked ? 1 : 0);
+                                        dom.result.innerHTML = calc.value();
+                                    });
+                                    </script>
 </body>
 
 </html>
