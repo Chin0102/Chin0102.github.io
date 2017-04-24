@@ -149,10 +149,10 @@
                                                     var result = '';
                                                     result += '商贷：' + mb + '<br>';
                                                     result += '契税：' + adjust(dt) + '<br>';
-                                                    result += '个税：' + adjust(pit) + '<br>';
-                                                    result += '增值税：' + adjust(vat) + '<br>';
-                                                    result += '综合地价款：' + adjust(djk) + '<br>';
-                                                    result += '土地出让金：' + adjust(crj) + '<br>';
+                                                    if (pit > 0) result += '个税：' + adjust(pit) + '<br>';
+                                                    if (vat > 0) result += '增值税：' + adjust(vat) + '<br>';
+                                                    if (djk > 0) result += '综合地价款：' + adjust(djk) + '<br>';
+                                                    if (crj > 0) result += '土地出让金：' + adjust(crj) + '<br>';
                                                     result += '中介费：' + adjust(commission) + '<br>';
                                                     result += '总首付：' + adjust(props.totalPrice - mb + dt + pit + vat + djk + crj + commission);
                                                     return result;
