@@ -41,7 +41,9 @@
                                     <p>
                                         <div id="result"></div>
                                         <script type="text/javascript">
-                                        //90m-
+                                        var adjust = function(num) {
+                                            return Math.round(num * 1000) / 1000;
+                                        };
                                         var calc = (function() {
                                             var props = {
                                                 totalPrice: 450,
@@ -126,7 +128,7 @@
                                                     var dtp = 0.01;
                                                     if (props.totalSize >= 144 || props.common != 1) {
                                                         dtp = 0.03;
-                                                    } else if (props.totalSize >= 90 && props.totalSize < 144) {
+                                                    } else if (props.totalSize > 90 && props.totalSize < 144) {
                                                         dtp = 0.015;
                                                     }
                                                     var dt = (props.appraisePrice - vat) * dtp; //契税
@@ -144,16 +146,15 @@
                                                             break;
                                                     }
                                                     var commission = props.totalPrice * props.commission / 100; //代理费
-                                                    var all = Math.round(((props.totalPrice - mb) + dt + pit + vat + djk + crj + commission) * 100) / 100;
                                                     var result = '';
                                                     result += '商贷：' + mb + '<br>';
-                                                    result += '契税：' + dt + '<br>';
-                                                    result += '个税：' + pit + '<br>';
-                                                    result += '增值税：' + vat + '<br>';
-                                                    result += '综合地价款：' + djk + '<br>';
-                                                    result += '土地出让金：' + crj + '<br>';
-                                                    result += '中介费：' + commission + '<br>';
-                                                    result += '总首付：' + all;
+                                                    result += '契税：' + adjust(dt) + '<br>';
+                                                    result += '个税：' + adjust(pit) + '<br>';
+                                                    result += '增值税：' + adjust(vat) + '<br>';
+                                                    result += '综合地价款：' + adjust(djk) + '<br>';
+                                                    result += '土地出让金：' + adjust(crj) + '<br>';
+                                                    result += '中介费：' + adjust(commission) + '<br>';
+                                                    result += '总首付：' + adjust(props.totalPrice - mb + dt + pit + vat + djk + crj + commission);
                                                     return result;
                                                 }
                                             };
