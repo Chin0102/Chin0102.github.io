@@ -7,8 +7,8 @@
 </head>
 
 <body style="margin:0px">
-    <div id="container" style="width:100%;height:400px;display:block">
-        <video id="video" src="360.mp4" controls></video>
+    <div id="container" style="width:100%;height:100%;display:block">
+        <video id="video" src="360.mp4" controls webkit-playsinline playsinline></video>
     </div>
     <script src="three.js"></script>
     <script>
@@ -126,7 +126,7 @@
             document.addEventListener(mouseupEvent, mouseup);
             document.addEventListener(mousemoveEvent, mousemove);
         };
-        container.addEventListener(mousedownEvent, mousedown);
+        document.addEventListener(mousedownEvent, mousedown);
     }
 
     video.addEventListener('play', onPlay, false);
