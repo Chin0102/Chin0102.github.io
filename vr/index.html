@@ -1,0 +1,117 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Web VR with HTML5</title>
+</head>
+
+<body style="margin:0px">
+	<div id="container" style="width:500px;height:400px;display:block">
+    	<video id="video" src="http://oozzjui77.bkt.clouddn.com/360.mp4" controls ></video>
+    </div>
+    <script src="three.js"></script>
+    <script>
+
+    var container = document.getElementById('container');
+    var width = container.clientWidth;
+    var height = container.clientHeight;
+
+    var video = document.getElementById('video');
+    video.width = width;
+    video.height = height;
+    video.style.position = "absolute";
+    video.play();
+
+    //camera
+    var camera = new THREE.PerspectiveCamera(75, 4 / 3, 1, 1000);
+    camera.zoom = 0.8;
+    camera.lookAt({x: 0,y: 0,z: 0});
+
+    //scene
+    var scene = new THREE.Scene();
+
+    //sphere
+    var textureReflection = new THREE.VideoTexture(video);
+    textureReflection.minFilter = THREE.LinearFilter;
+    textureReflection.format = THREE.RGBFormat;
+    var material = new THREE.MeshBasicMaterial({
+        map:textureReflection
+    });
+    var geometry = new THREE.SphereBufferGeometry(500, width/10, height/10);
+    geometry.scale(-1, 1, 1);
+    var sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    //renderer
+    var renderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+    // renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(width,height);
+    renderer.domElement.style.position = "absolute";
+    renderer.domElement.style.zIndex = 1;
+    container.appendChild(renderer.domElement);
+    var render = function() {
+        requestAnimationFrame(render);
+        // sphere.rotation.z += 0.1;
+        renderer.clear();
+        renderer.render(scene, camera);
+    };
+    render();
+
+	var getMousePos = function(ev) {
+        try {
+            var x = y = 0;
+            if (ev.changedTouches) {
+                var pos = ev.changedTouches[0];
+                x = pos.pageX;
+                y = pos.pageY;
+            } else {
+                if (window.pageYOffset) {
+                    x = window.pageXOffset;
+                    y = window.pageYOffset;
+                } else {
+                    var doc = document.documentElement;
+                    var body = document.body;
+                    x = (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+                    y = (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
+                }
+                x += ev.clientX;
+                y += ev.clientY;
+            }
+            return {
+                x: x,
+                y: y
+            };
+        } catch (error) {
+            return null;
+        }
+    };
+
+    var toRadian = function(value){
+    	return Math.max(Math.min(90*Math.PI/180,value),-90*Math.PI/180);
+    };
+
+    var mp={};
+    var mousemove = function(e){
+    	var p = getMousePos(e);
+    	sphere.rotation.y -= (p.x-mp.x)/width*2;
+        sphere.rotation.x = toRadian(sphere.rotation.x - (p.y-mp.y) / height*2);
+    	mp = p;
+    };
+    var mouseup = function(e){
+		document.removeEventListener("mouseup",mouseup);
+		document.removeEventListener("mousemove",mousemove);
+    };
+	var mousedown = function(e){
+		mp = getMousePos(e);
+    	document.addEventListener("mouseup",mouseup);
+    	document.addEventListener("mousemove",mousemove);
+    };
+    container.addEventListener("mousedown",mousedown);
+
+    </script>
+</body>
+
+</html>
