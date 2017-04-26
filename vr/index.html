@@ -7,7 +7,7 @@
 </head>
 
 <body style="margin:0px">
-    <div id="container" style="width:350px;height:350px;display:block">
+    <div id="container" style="width:100%;height:400px;display:block">
         <video id="video" src="360.mp4" controls></video>
     </div>
     <script src="three.js"></script>
@@ -66,21 +66,23 @@
 
         var getMousePos = function(ev) {
             try {
-                var x = y = 0;
+                var x = y = 0,
+                    doc = document.documentElement,
+                    body = document.body;
+                if (!ev)
+                    ev = window.event;
+                if (window.pageYOffset) {
+                    x = window.pageXOffset;
+                    y = window.pageYOffset;
+                } else {
+                    x = (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+                    y = (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
+                }
                 if (ev.changedTouches) {
                     var pos = ev.changedTouches[0];
                     x = pos.pageX;
                     y = pos.pageY;
                 } else {
-                    if (window.pageYOffset) {
-                        x = window.pageXOffset;
-                        y = window.pageYOffset;
-                    } else {
-                        var doc = document.documentElement;
-                        var body = document.body;
-                        x = (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-                        y = (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
-                    }
                     x += ev.clientX;
                     y += ev.clientY;
                 }
@@ -97,15 +99,15 @@
             return Math.max(Math.min(90 * Math.PI / 180, value), -90 * Math.PI / 180);
         };
 
-        var mouseupEvent,mousemoveEvent,mousedownEvent
-        if ( navigator.userAgent.match(/iPad|iPhone|Android|SymbianOS|Windows Phone/i) != null ) {
-        	mouseupEvent = 'mouseup';
-        	mousemoveEvent = 'mousemove';
-        	mousedownEvent = 'mousedown';
-        }else{
-			mouseupEvent = 'touchstart';
-        	mousemoveEvent = 'touchmove';
-        	mousedownEvent = 'touchend';
+        var mouseupEvent, mousemoveEvent, mousedownEvent;
+        if (navigator.userAgent.match(/iPad|iPhone|Android|SymbianOS|Windows Phone/i) == null) {
+            mouseupEvent = 'mouseup';
+            mousemoveEvent = 'mousemove';
+            mousedownEvent = 'mousedown';
+        } else {
+            mouseupEvent = 'touchstart';
+            mousemoveEvent = 'touchmove';
+            mousedownEvent = 'touchend';
         }
 
         var mp = {};
@@ -127,7 +129,7 @@
         container.addEventListener(mousedownEvent, mousedown);
     }
 
-    video.addEventListener('play',onPlay,false);
+    video.addEventListener('play', onPlay, false);
     </script>
 </body>
 
