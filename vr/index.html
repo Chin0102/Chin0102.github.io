@@ -7,6 +7,7 @@
 </head>
 
 <body style="margin:0px">
+
 <div id="container" style="width:100%;height:100%;display:block">
     <video id="video" src="360.mp4" controls webkit-playsinline playsinline></video>
 </div>
@@ -22,17 +23,36 @@
     video.height = height;
     video.style.position = "absolute";
 
+    var v3d;
+
     function onPlay() {
-        var v3d = new Video3D(container);
+        if (v3d) return;
+        //3D画面
+        v3d = new Video3D(container);
         v3d.resize(document.body.clientWidth, document.body.clientHeight);
         v3d.play(video);
+        //操作
+        var event;
         if (navigator.userAgent.match(/iPad|iPhone|Android|SymbianOS|Windows Phone/i) == null) {
-            new MouseControl(container, v3d);
+            event = 'click';
+            new MouseControl(container, v3d);//PC-鼠标
         } else {
-            new OrientationControl(v3d);
+            event = 'touchstart';
+            new OrientationControl(v3d);//M-重力感应
         }
+        container.addEventListener(event, function (e) {
+            if (video.paused) video.play();
+            else video.pause();
+        });
+        //窗口大小监听
+        window.addEventListener("resize", function (e) {
+            var w = container.clientWidth;
+            var h = container.clientHeight;
+            video.width = width;
+            video.height = height;
+            v3d.resize(w, h);
+        }, false);
     }
-
     video.addEventListener('play', onPlay, false);
 </script>
 </body>
